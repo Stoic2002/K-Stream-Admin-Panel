@@ -294,11 +294,21 @@ const EpisodeList = ({ seasonId, onEdit }: { seasonId: string, onEdit: (ep: Epis
         toast.success("Episode deleted");
     }
 
-    const handlePlay = (url: string) => {
-        if (url) window.open(url, '_blank');
-        else toast.error("No video URL available");
+const handlePlay = (url: string) => {
+    if (url) {
+        const newWindow = window.open(url, '_blank', 'noreferrer');
+        // Jika browser memblokir window.open, fallback ke link manual:
+        if (!newWindow) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank';
+            link.rel = 'noreferrer'; // Ini kuncinya
+            link.click();
+        }
+    } else {
+        toast.error("No video URL available");
     }
-
+}
     return (
         <div className="space-y-4">
             <Table>
